@@ -1,5 +1,5 @@
 import React from 'react';
-import { MAX_LETTERS } from './constants';
+import { MAX_LETTERS } from '../config/constants';
 import '../styles/LetterSquares.css';
 
 export const LetterSquares = ({ letters, status }) => {
