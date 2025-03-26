@@ -14,6 +14,7 @@ export function App() {
     const actionListener = actionListenerRef.current;
 
     useEffect(() => {
+        // Define handleEnter listener function
         const handleEnter = async (data) => {
             const valid = await isValidWord(data);
             setStatus(valid ? 'success' : 'error');
@@ -41,9 +42,9 @@ export function App() {
         }
     };
 
-    const handleLetterKeyClick = (key) => {
+    const handleLetterKeyClick = (letter) => {
         if (letters.length < MAX_LETTERS) {
-            setLetters((prev) => [...prev, key]);
+            setLetters((prev) => [...prev, letter]);
             setStatus('');
         }
     };
