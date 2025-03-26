@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/LetterSquares.css';
 
-export const LetterSquare = ({ letters, status }) => {
+export const LetterSquares = ({ letters, status }) => {
     return (
         <div className="square">
             {letters.map((letter) => {
