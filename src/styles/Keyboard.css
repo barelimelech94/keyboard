@@ -1,0 +1,45 @@
+.keyboard {
+    margin-top: 20px;
+    text-align: center;
+    border-radius: 8px;
+    background-color: rgb(39, 33, 33);
+    padding: 10px;
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.05rem;
+}
+
+.keyboard button {
+    margin: 3px;
+    padding: 8px 12px;
+    font-size: 1rem;
+    min-width: 40px;
+}
+
+.control-button {
+    margin-top: 10px;
+}
+
+.control-button:disabled {
+    cursor: default;
+}
+
+.keyboard button:not(:disabled):hover,
+.control-button:not(:disabled):hover {
+    transform: scale(1.04);
+    filter: drop-shadow(0 0 0.3em rgb(117, 255, 255));
+}
+
+.keyboard button:not(:disabled):active,
+.control-button:not(:disabled):active {
+    transform: scale(0.97);
+}
+
+.keyboard button:focus,
+.control-button:focus {
+    outline: none;
+    box-shadow: none;
+}
