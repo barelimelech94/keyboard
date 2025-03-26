@@ -3,9 +3,8 @@ import { LetterSquares } from './components/LetterSquares';
 import { Keyboard } from './components/Keyboard';
 import { isValidWord } from './utils/dictionary';
 import { MyActionListener } from './utils/MyActionListener';
+import { MAX_LETTERS } from './config/constants';
 import './App.css';
-
-const MAX_LETTERS = 5;
 
 export function App() {
     const [letters, setLetters] = useState([]);
@@ -60,11 +59,7 @@ export function App() {
 
     return (
         <div className="app">
-            <LetterSquares
-                letters={letters}
-                status={status}
-                maxLength={MAX_LETTERS}
-            ></LetterSquares>
+            <LetterSquares letters={letters} status={status}></LetterSquares>
             <Keyboard onKeyClick={handleKeyClick}></Keyboard>
         </div>
     );
