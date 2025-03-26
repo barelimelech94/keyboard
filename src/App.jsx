@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { LetterSquare } from './components/LetterSquare';
+import { LetterSquares } from './components/LetterSquares';
 import { Keyboard } from './components/Keyboard';
 import { isValidWord } from './utils/dictionary';
 import { MyActionListener } from './utils/MyActionListener';
@@ -57,14 +57,9 @@ export function App() {
         }
     };
 
-    const squares = [];
-    for (let i = 0; i < MAX_LETTERS; i++) {
-        squares.push(<LetterSquare key={i} letter={letters[i] || ''} status={status} />);
-    }
-
     return (
         <div className="app">
-            <div className="squares">{squares}</div>
+            <LetterSquares letters={letters} status={status} />
             <Keyboard onKeyClick={handleKeyClick} />
         </div>
     );
