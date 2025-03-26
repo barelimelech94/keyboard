@@ -59,8 +59,12 @@ export function App() {
 
     return (
         <div className="app">
-            <LetterSquares letters={letters} status={status} />
-            <Keyboard onKeyClick={handleKeyClick} />
+            <LetterSquares
+                letters={letters}
+                status={status}
+                maxLength={MAX_LETTERS}
+            ></LetterSquares>
+            <Keyboard onKeyClick={handleKeyClick}></Keyboard>
         </div>
     );
 }

@@ -1,12 +1,14 @@
 import React from 'react';
 import '../styles/LetterSquares.css';
 
-export const LetterSquares = ({ letters, status }) => {
+export const LetterSquares = ({ letters, status, maxLength }) => {
     return (
         <div className="squares">
-            {letters.map((letter) => {
-                <div className={`letter-square ${status}`}>{letter}</div>;
-            })}
+            {Array.from({ length: maxLength }, (_, i) => (
+                <div key={i} className={`letter-square ${status}`}>
+                    {letters[i] || ''}
+                </div>
+            ))}
         </div>
     );
 };
