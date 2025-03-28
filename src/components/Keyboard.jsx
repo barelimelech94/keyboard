@@ -1,20 +1,20 @@
 import React from 'react';
 import '../styles/Keyboard.css';
+import { KEY_ROWS } from '../config/constants';
 
-export const Keyboard = ({ onKeyClick }) => {
-    // prettier-ignore
-    const keysRows = [
-    ['Q','W','E','R','T','Y','U','I','O','P'],
-    ['A','S','D','F','G','H','J','K','L'],
-    ['ENTER','Z','X','C','V','B','N','M', '⌫']
-  ];
-
+export const Keyboard = ({ onKeyClick, activeKey }) => {
     return (
         <div className="keyboard">
-            {keysRows.map((keyRow, rowIndex) => (
+            {KEY_ROWS.map((keyRow, rowIndex) => (
                 <div key={`row-${rowIndex}`} className="keyboard-row">
                     {keyRow.map((key) => (
-                        <button key={key} onClick={() => onKeyClick(key)}>
+                        <button
+                            key={key}
+                            tabIndex="-1"
+                            onMouseDown={(e) => e.preventDefault()}
+                            className={activeKey === key ? 'pressed' : ''}
+                            onClick={() => onKeyClick(key)}
+                        >
                             {key}
                         </button>
                     ))}

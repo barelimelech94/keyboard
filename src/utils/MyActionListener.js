@@ -14,7 +14,9 @@ export class MyActionListener {
         if (!this.listeners.has(action)) {
             this.listeners.set(action, []);
         }
-        this.listeners.get(action).push(listener);
+        if (!this.listeners.get(action).includes(listener)) {
+            this.listeners.get(action).push(listener);
+        }
     }
     // When calling the removeListener all listeners are removed from the action
     // and the action itself is removed and can no longer be called.
@@ -32,8 +34,8 @@ export class MyActionListener {
         if (!this.listeners.get(action)) {
             throw new Error(`Can't emit an event. Event "${action}" doesn't exits.`);
         }
-        this.listeners.get(action).forEach((element) => {
-            element(data);
+        this.listeners.get(action).forEach((listener) => {
+            listener(data);
         });
     }
 }

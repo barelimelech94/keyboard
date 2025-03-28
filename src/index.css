@@ -31,5 +31,4 @@ button {
     background-color: rgb(103, 95, 103);
     border-color: azure;
     cursor: pointer;
-    transition: transform 0.07s ease-in, filter 0.07s ease-in;
 }

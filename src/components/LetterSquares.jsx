@@ -7,7 +7,7 @@ export const LetterSquares = ({ letters, status }) => {
         <div className="squares">
             {Array.from({ length: MAX_LETTERS }, (_, i) => (
                 <div key={i} className={`letter-square ${status}`}>
-                    {letters[i]}
+                    {letters[i] || ''}
                 </div>
             ))}
         </div>
