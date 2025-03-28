@@ -1,15 +1,16 @@
-import React from 'react';
-import { MAX_LETTERS } from '../config/constants';
+import React, { memo } from 'react';
+import config from '../config/config';
 import '../styles/LetterSquares.css';
 
-export const LetterSquares = ({ letters, status }) => {
+export const LetterSquares = memo(({ letters, status }) => {
+    // console.log('LETTER SQUARES RENDERED');
     return (
         <div className="squares">
-            {Array.from({ length: MAX_LETTERS }, (_, i) => (
+            {Array.from({ length: config.MAX_LETTERS }, (_, i) => (
                 <div key={i} className={`letter-square ${status}`}>
                     {letters[i] || ''}
                 </div>
             ))}
         </div>
     );
-};
+});

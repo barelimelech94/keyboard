@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { memo } from 'react';
+import config from '../config/config';
 import '../styles/Keyboard.css';
-import { KEY_ROWS } from '../config/constants';
 
-export const Keyboard = ({ onKeyClick, activeKey }) => {
+export const Keyboard = memo(({ onKeyClick, activeKey }) => {
+    // console.log('KEYBOARD RENDERED');
     return (
         <div className="keyboard">
-            {KEY_ROWS.map((keyRow, rowIndex) => (
+            {config.KEYBOARD_ROWS.map((keyRow, rowIndex) => (
                 <div key={`row-${rowIndex}`} className="keyboard-row">
                     {keyRow.map((key) => (
                         <button
@@ -22,4 +23,4 @@ export const Keyboard = ({ onKeyClick, activeKey }) => {
             ))}
         </div>
     );
-};
+});

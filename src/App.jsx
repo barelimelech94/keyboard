@@ -1,17 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import config from './config/config';
 import { LetterSquares } from './components/LetterSquares';
 import { Keyboard } from './components/Keyboard';
 import { isValidWord } from './utils/dictionary';
 import { MyActionListener } from './utils/MyActionListener';
-import {
-    KEY_MAP,
-    MAX_LETTERS,
-    STATUS_SUCCESS,
-    STATUS_ERROR,
-    ACTION_BACKSPACE,
-    ACTION_LETTER,
-    ACTION_ENTER,
-} from './config/constants';
 import './App.css';
 
 export function App() {
@@ -20,92 +12,111 @@ export function App() {
     const [checking, setChecking] = useState(false);
     const [activeKey, setActiveKey] = useState('');
 
+    // Persistent instance of action listener
     const actionListenerRef = useRef(new MyActionListener());
     const actionListener = actionListenerRef.current;
 
-    useEffect(() => {
-        const handleEnter = async (wordToCheck) => {
-            setChecking(true);
+    // Handle Enter key: validate word and update status
+    const handleEnter = useCallback(async (wordToCheck) => {
+        setChecking(true);
+        try {
             const valid = await isValidWord(wordToCheck);
-            setStatus(valid ? STATUS_SUCCESS : STATUS_ERROR);
+            setStatus(valid ? config.STATUS_SUCCESS : config.STATUS_FAILURE);
+        } catch (error) {
+            setStatus(config.STATUS_ERROR);
+            console.error(error.message);
+        } finally {
             setChecking(false);
-        };
+        }
+    }, []);
 
-        const handleBackspace = () => {
-            setLetters((prev) => prev.slice(0, -1));
-            setStatus('');
-        };
+    // Handle backspace: remove last letter
+    const handleBackspace = useCallback(() => {
+        setLetters((prev) => prev.slice(0, -1));
+        setStatus('');
+    }, []);
 
-        const handleLetter = (letter) => {
-            setLetters((prev) => [...prev, letter]);
-        };
+    // Handle letter input: append letter
+    const handleLetter = useCallback((letter) => {
+        setLetters((prev) => [...prev, letter]);
+    }, []);
 
-        actionListener.registerListener(ACTION_ENTER, handleEnter);
-        actionListener.registerListener(ACTION_BACKSPACE, handleBackspace);
-        actionListener.registerListener(ACTION_LETTER, handleLetter);
-        return () => {
-            actionListener.removeListener(ACTION_ENTER);
-            actionListener.removeListener(ACTION_BACKSPACE, handleBackspace);
-            actionListener.removeListener(ACTION_LETTER, handleLetter);
-        };
-    }, [actionListener]);
+    // Handle on-screen key press
+    const handleKeyClick = useCallback(
+        (key) => {
+            const upperKey = key.toUpperCase();
+            setActiveKey(upperKey);
 
-    const handleEnterClick = () => {
-        if (letters.length === MAX_LETTERS) {
-            try {
-                actionListener.emit(ACTION_ENTER, letters.join(''));
-            } catch (error) {
-                console.error(error.message);
+            if (upperKey === config.ENTER_NAME && letters.length === config.MAX_LETTERS) {
+                actionListener.emit(config.ACTION_ENTER, letters.join(''));
+            } else if ((key === '⌫' || upperKey === 'BACKSPACE') && letters.length > 0) {
+                actionListener.emit(config.ACTION_BACKSPACE);
+            } else if (/^[a-zA-Z]$/.test(key) && letters.length < config.MAX_LETTERS) {
+                actionListener.emit(config.ACTION_LETTER, key);
             }
-        }
-    };
-    const handleBackspaceClick = () => {
-        if (letters.length > 0) {
-            actionListener.emit(ACTION_BACKSPACE);
-        }
-    };
+        },
+        [actionListener, letters]
+    );
 
-    const handleLetterKeyClick = (letter) => {
-        if (letters.length < MAX_LETTERS) {
-            actionListener.emit(ACTION_LETTER, letter);
-        }
-    };
-    const handleKeyClick = useCallback((key) => {
-        const upperKey = key.toUpperCase();
-        setActiveKey(upperKey);
-        if (upperKey === ACTION_ENTER) {
-            handleEnterClick();
-        } else if (key === '⌫' || upperKey === 'BACKSPACE') {
-            handleBackspaceClick();
-        } else if (/^[a-zA-Z]$/.test(key)) {
-            handleLetterKeyClick(key);
-        }
-    });
-
+    // Register action handlers
     useEffect(() => {
-        const handleGlobalKeyDown = (event) => {
+        const actionEventHandlers = {
+            [config.ACTION_ENTER]: handleEnter,
+            [config.ACTION_BACKSPACE]: handleBackspace,
+            [config.ACTION_LETTER]: handleLetter,
+        };
+
+        Object.entries(actionEventHandlers).forEach(([actionEvent, handler]) => {
+            actionListener.registerListener(actionEvent, handler);
+        });
+
+        return () => {
+            Object.keys(actionEventHandlers).forEach((action) => {
+                actionListener.removeListener(action);
+            });
+        };
+    }, [actionListener, handleBackspace, handleEnter, handleLetter]);
+
+    // Handle physical keyboard input
+    const handleGlobalKeyDown = useCallback(
+        (event) => {
             if (!checking) {
-                const key = KEY_MAP[event.key] || event.key;
+                const key = config.KEY_MAP[event.key] || event.key;
                 handleKeyClick(key);
             }
-        };
-        const handleGlobalKeyUp = () => {
-            setActiveKey('');
+        },
+        [checking, handleKeyClick]
+    );
+
+    // Clear active key state
+    const resetActiveKey = () => {
+        setActiveKey('');
+    };
+
+    // Register global key/mouse events
+    useEffect(() => {
+        const windowEventHandlers = {
+            mouseout: resetActiveKey,
+            keyup: resetActiveKey,
+            keydown: handleGlobalKeyDown,
         };
 
-        window.addEventListener('keyup', handleGlobalKeyUp);
-        window.addEventListener('keydown', handleGlobalKeyDown);
+        Object.entries(windowEventHandlers).forEach(([event, handler]) => {
+            window.addEventListener(event, handler);
+        });
+
         return () => {
-            window.removeEventListener('keyup', handleGlobalKeyUp);
-            window.removeEventListener('keydown', handleGlobalKeyDown);
+            Object.entries(windowEventHandlers).forEach(([event, handler]) => {
+                window.removeEventListener(event, handler);
+            });
         };
-    }, [checking, handleKeyClick]);
+    }, [checking, handleGlobalKeyDown, handleKeyClick]);
 
     return (
         <div className="app">
             {checking ? <h2 className="simple-pulse">Checking Word...</h2> : <h2>Type Anything</h2>}
-            <LetterSquares letters={letters} status={status}></LetterSquares>
-            <Keyboard onKeyClick={handleKeyClick} activeKey={activeKey}></Keyboard>
+            <LetterSquares letters={letters} status={status} />
+            <Keyboard onKeyClick={handleKeyClick} activeKey={activeKey} />
         </div>
     );
 }

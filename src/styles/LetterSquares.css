@@ -14,8 +14,12 @@
     border-color: green;
     font-weight: bold;
 }
-.letter-square.error {
+.letter-square.failure {
     border-color: red;
+}
+
+.letter-square.error {
+    border-color: rgb(255, 153, 0);
 }
 
 .squares {
