@@ -1,6 +1,7 @@
 const config = {
-    // Max letters allowed
+    // Min/Max letters allowed
     MAX_LETTERS: 5,
+    MIN_LETTERS: 2,
 
     // Constant Names
     ENTER_NAME: 'ENTER',
