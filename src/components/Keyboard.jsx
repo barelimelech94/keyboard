@@ -5,7 +5,7 @@ import '../styles/Keyboard.css';
 export const Keyboard = memo(({ onKeyClick, activeKey }) => {
     // console.log('KEYBOARD RENDERED');
     return (
-        <div className="keyboard">
+        <div className="keyboard" data-testid="keyboard">
             {config.KEYBOARD_ROWS.map((keyRow, rowIndex) => (
                 <div key={`row-${rowIndex}`} className="keyboard-row">
                     {keyRow.map((key) => (
