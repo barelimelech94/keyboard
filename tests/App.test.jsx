@@ -5,7 +5,7 @@ import { App } from '../src/App';
 import { isValidWord } from '../src/utils/dictionary';
 
 jest.mock('../src/utils/dictionary', () => ({
-  isValidWord: jest.fn(),
+    isValidWord: jest.fn(),
 }));
 
 describe('App Component', () => {

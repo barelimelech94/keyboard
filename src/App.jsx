@@ -36,19 +36,22 @@ export function App() {
     }, []);
 
     // Handle letter input: append letter
-    const handleLetter = useCallback((letter) => {
-        setLetters((prev) => {
-            if (checkedOnce) {
-                setCheckedOnce(false);
-                setStatus('');
-                return [letter];
-            }
-            if (prev.length < config.MAX_LETTERS) {
-                return [...prev, letter];
-            }
-            return prev;
-        });
-    }, [checkedOnce]);
+    const handleLetter = useCallback(
+        (letter) => {
+            setLetters((prev) => {
+                if (checkedOnce) {
+                    setCheckedOnce(false);
+                    setStatus('');
+                    return [letter];
+                }
+                if (prev.length < config.MAX_LETTERS) {
+                    return [...prev, letter];
+                }
+                return prev;
+            });
+        },
+        [checkedOnce]
+    );
 
     // Handle on-screen key press
     const handleKeyClick = useCallback(

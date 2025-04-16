@@ -30,7 +30,7 @@ describe('LetterSquares Component', () => {
     test('applies the correct status class to squares', () => {
         render(<LetterSquares letters={['A', 'B', 'C']} status="success" />);
         const squares = screen.getByTestId('letter-squares').querySelectorAll('.letter-square');
-        squares.forEach(square => {
+        squares.forEach((square) => {
             expect(square).toHaveClass('success');
         });
     });
